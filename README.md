@@ -33,6 +33,20 @@ A skill for AI coding assistants that converts project images to AVIF format at 
 
 ---
 
+## Quick Start                                                                
+
+Clone the repository to your computer and copy it to your AI tool's skills    
+directory:                                                                     
+                                                                               
+```bash                                                                       
+git clone https://github.com/andac/compress-to-avif.git                       
+cd compress-to-avif                                                           
+```                                                                           
+                                                                             
+Then follow the installation instructions below.                                               
+
+---
+
 ## Installation
 
 Clone or copy this folder into the tool's skills directory:
