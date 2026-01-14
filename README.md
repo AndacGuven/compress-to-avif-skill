@@ -4,10 +4,9 @@
 
   # Compress to AVIF
 
-  **Convert project images to AVIF format without resizing - Preserve quality, reduce file size**
+  **AI Assistant Skill - Convert images to AVIF without resizing**
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-  [![Python](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
 
 </div>
 
@@ -15,7 +14,7 @@
 
 ## About
 
-Compress to AVIF is a simple Python script that converts your images to the modern AVIF format at quality 75 while preserving their original resolution. AVIF offers significantly better compression than traditional formats like JPEG and PNG, resulting in smaller file sizes without noticeable quality loss.
+A skill for AI coding assistants that converts project images to AVIF format at quality 75 while preserving original resolution. Just tell your AI assistant "convert images to AVIF" and it handles the rest.
 
 ### Why AVIF?
 
@@ -26,73 +25,85 @@ Compress to AVIF is a simple Python script that converts your images to the mode
 
 ---
 
-## Features
+## Supported Agents
 
-- Batch convert multiple images at once
-- Configurable quality settings (1-100)
-- Preserves original image dimensions
-- Generates a mapping file for easy reference updates
-- Dry-run mode to preview changes
-- Handles EXIF orientation automatically
-- Supports both absolute and relative paths
+- Codex CLI
+- Claude Code
+- Gemini CLI
 
 ---
 
 ## Installation
 
-### Requirements
-
-- Python 3.8 or higher
-- Pillow (PIL)
-- pillow-avif-plugin
-
-### Install Dependencies
+Clone or copy this folder into the tool's skills directory:
 
 ```bash
-python3 -m pip install pillow pillow-avif-plugin
+# For Claude Code
+cp -r compress-to-avif ~/.claude/skills/
+
+# For Codex CLI
+cp -r compress-to-avif ~/.codex/skills/
+
+# For Gemini CLI
+cp -r compress-to-avif ~/.gemini/skills/
 ```
+
+Restart the tool so it loads the new skill.
 
 ---
 
 ## Usage
 
-### 1. Create an Image List
+Once installed, simply ask your AI assistant:
 
-Create an `image-files.json` file in your project root:
+```
+"Convert my images to AVIF"
+"Optimize all images in public/assets to AVIF format"
+"Compress project images to AVIF at quality 80"
+```
+
+The skill will:
+
+1. Scan your project for images
+2. Create an image list JSON
+3. Run the compression script
+4. Generate a mapping file for reference updates
+
+---
+
+## How It Works
+
+### Workflow
+
+```
+┌─────────────┐    ┌──────────────┐    ┌─────────────┐
+│   Ask AI    │ -> │ Collect      │ -> │ Convert to  │
+│ Assistant   │    │ Image Paths  │    │ AVIF        │
+└─────────────┘    └──────────────┘    └─────────────┘
+                                              │
+                                              ▼
+                                       ┌─────────────┐
+                                       │ Update      │
+                                       │ References  │
+                                       └─────────────┘
+```
+
+### Image List Format
+
+The skill creates an `image-files.json`:
 
 ```json
 {
   "images": [
     "public/images/hero.jpg",
-    { "path": "src/assets/card.png" },
-    { "file": "assets/banner.webp" }
+    { "path": "src/assets/card.png" }
   ]
 }
 ```
 
-### 2. Run the Script
+### Mapping File Output
 
-```bash
-python3 scripts/compress_images_to_avif.py \
-  --images image-files.json \
-  --output-dir assets/optimized \
-  --quality 75
-```
-
-### Options
-
-| Option | Alias | Description | Default |
-|--------|-------|-------------|---------|
-| `--images` | `--sizes` | Path to image list JSON | `image-files.json` |
-| `--output-dir` | - | Output directory for .avif files | Same as input |
-| `--quality` | - | AVIF quality (1-100) | `75` |
-| `--root-dir` | - | Root directory for relative paths | Current directory |
-| `--mapping-file` | - | Path for the mapping JSON output | `image-map.json` |
-| `--dry-run` | - | Preview without writing files | `false` |
-
-### 3. Use the Mapping File
-
-The script generates an `image-map.json` file that maps original paths to new AVIF paths:
+The generated `image-map.json` provides:
 
 ```json
 {
@@ -110,23 +121,17 @@ The script generates an `image-map.json` file that maps original paths to new AV
 }
 ```
 
-Use this mapping to update references in your code or HTML:
-
-```html
-<picture>
-  <source srcset="assets/optimized/hero.avif" type="image/avif">
-  <img src="public/images/hero.jpg" alt="Hero image">
-</picture>
-```
-
 ---
 
-## Example Output
+## Options
 
-```
-Processed: 5, skipped: 0
-Mapping written to: image-map.json
-```
+The skill supports these parameters:
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--quality` | AVIF quality (1-100) | `75` |
+| `--output-dir` | Output directory | Original location |
+| `--dry-run` | Preview without writing | `false` |
 
 ---
 
@@ -141,22 +146,37 @@ AVIF is supported in all modern browsers:
 | Safari | 16+ |
 | Edge | 85+ |
 
-For older browsers, use the `<picture>` element with fallbacks as shown above.
+### Fallback Example
+
+```html
+<picture>
+  <source srcset="image.avif" type="image/avif">
+  <img src="image.jpg" alt="Fallback">
+</picture>
+```
+
+---
+
+## File Structure
+
+```
+compress-to-avif/
+├── SKILL.md              # Skill definition
+├── scripts/
+│   └── compress_images_to_avif.py   # Core script
+├── working-demo.png      # Demo screenshot
+├── README.md             # This file
+└── LICENSE               # MIT License
+```
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
 ## Author
 
-Made with ❤️ by [Andac](https://github.com/andac)
+Made by [Andac](https://github.com/AndacGuven)
